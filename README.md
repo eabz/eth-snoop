@@ -46,7 +46,7 @@ Copy the `.env.example` and rename it to `.env `
 
 Start the indexer
 ```
-docker compose -f docker/docker-compose.yml up
+docker compose up
 ```
 
 ## Program flags
