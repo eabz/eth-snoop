@@ -1,4 +1,5 @@
 use crate::chains::{get_chain, Chain};
+use alloy::primitives::Address;
 use clap::{command, Parser};
 
 #[derive(Parser, Debug)]
@@ -46,6 +47,7 @@ pub struct Config {
     pub debug: bool,
     pub rpc: String,
     pub start_block: i64,
+    pub observe_contracts: Vec<Address>,
 }
 
 impl Default for Config {
@@ -69,6 +71,8 @@ impl Config {
             // [custom setup]:  Define the block from which you want to start syncing.
             //                  This is usually the same block at which the contract was deployed.
             start_block: 0,
+            // [custom setup]:  Define the list of contracts to observe for custom events.
+            observe_contracts: vec![],
         }
     }
 }
