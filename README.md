@@ -2,7 +2,7 @@
 <strong>ETH Snoop</strong>
 </h1>
 <p align="center">
-<strong>Simple ETH event indexer boilerplate</strong>
+<strong>ETH event indexer boilerplate</strong>
 </p>
 
 ![build](https://github.com/eabz/eth-snoop/actions/workflows/build.yml/badge.svg)
@@ -11,10 +11,10 @@
 
 ## Program flags
 
-| Flag            | Default     | Purpose                                                |
-| --------------- | :----------:| ------------------------------------------------------ |
-| `--debug`       |  false      | Start log with debug.                                  |
-| `--chain`       | `mainnet`   | String identifying the chain to sync.                  |
-| `--rpc`         | `empty`     | Comma separated list of rpcs to use to fetch blocks.   |
-| `--database`    | `empty`     | Postgres database string with username and password.   |
-| `--batch-size`  | `50`        | Amount of blocks to fetch in parallel.                 |
+| Flag           |  Default  | Purpose                                                                  |
+| -------------- | :-------: | ------------------------------------------------------------------------ |
+| `--debug`      |   false   | Enables verbose (debug-level) logging output.                            |
+| `--chain`      | `mainnet` | Specifies the target chain/network to index (e.g. 'mainnet', 'testnet'). |
+| `--rpc`        |  `empty`  | URL of the RPC endpoint to fetch chain data and logs.                    |
+| `--database`   |  `empty`  | PostgreSQL connection URL (e.g. 'postgres://user:password@host/dbname'). |
+| `--batch-size` |   `50`    | Number of blocks to fetch in each batch of logs.                         |

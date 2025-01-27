@@ -2,28 +2,39 @@ use crate::chains::{get_chain, Chain};
 use clap::{command, Parser};
 
 #[derive(Parser, Debug)]
-#[command(
-    name = "ETH Snoop",
-    about = "Scalable SQL indexer for the Monad Blockchain."
-)]
+#[command(name = "ETH Snoop", about = "ETH event indexer.")]
 pub struct IndexerArgs {
     #[arg(
         long,
-        help = "Amount of blocks to fetch logs from.",
+        help = "Number of blocks to fetch in each batch of logs.",
         default_value_t = 50
     )]
     pub batch_size: usize,
+
     #[arg(
         long,
-        help = "String identifying the chain to sync.",
+        help = "Specifies the target chain/network to index (e.g. 'mainnet', 'testnet').",
         default_value_t = String::from("mainnet")
     )]
     pub chain: String,
-    #[arg(long, help = "Postgres database url")]
+
+    #[arg(
+        long,
+        help = "PostgreSQL connection URL (e.g. 'postgres://user:password@host/dbname')."
+    )]
     pub database: String,
-    #[arg(long, help = "Start log with debug.", default_value_t = false)]
+
+    #[arg(
+        long,
+        help = "Enables verbose (debug-level) logging output.",
+        default_value_t = false
+    )]
     pub debug: bool,
-    #[arg(long, help = "Url of the RPC endpoint")]
+
+    #[arg(
+        long,
+        help = "URL of the RPC endpoint to fetch chain data and logs."
+    )]
     pub rpc: String,
 }
 
