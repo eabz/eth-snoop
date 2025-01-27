@@ -2,7 +2,7 @@ use crate::chains::{get_chain, Chain};
 use clap::{command, Parser};
 
 #[derive(Parser, Debug)]
-#[command(name = "ETH Snoop", about = "ETH event indexer.")]
+#[command(name = "ETH Snoop", about = "ETH logs and event indexer.")]
 pub struct IndexerArgs {
     #[arg(
         long,
