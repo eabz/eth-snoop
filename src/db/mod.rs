@@ -1,13 +1,17 @@
 pub mod models;
+pub mod schema;
 
+use self::schema::logs;
 use crate::chains::Chain;
 use core::panic;
-use diesel::{Connection, PgConnection};
+use diesel::{Connection, PgConnection, RunQueryDsl};
 use diesel_migrations::{
     embed_migrations, EmbeddedMigrations, MigrationHarness,
 };
+use field_count::FieldCount;
 use futures::future::join_all;
 use log::*;
+use models::log::DatabaseLog;
 use std::cmp::min;
 
 pub const MAX_PARAM_SIZE: u16 = u16::MAX;
@@ -27,6 +31,10 @@ impl DatabaseTables {
             DatabaseTables::Logs => "logs",
         }
     }
+}
+
+pub struct StoreData {
+    pub logs: Vec<DatabaseLog>,
 }
 
 #[derive(Clone)]
@@ -52,8 +60,34 @@ impl Database {
             .expect("unable to connect to the database")
     }
 
-    pub async fn store_data(&self) {
+    async fn store_logs(&self, logs: &[DatabaseLog]) {
+        let mut connection = self.get_connection();
+
+        let chunks = get_chunks(logs.len(), DatabaseLog::field_count());
+
+        for (start, end) in chunks {
+            diesel::insert_into(logs::dsl::logs)
+                .values(&logs[start..end])
+                .on_conflict_do_nothing()
+                .execute(&mut connection)
+                .expect("unable to store logs into database");
+        }
+    }
+
+    pub async fn store_data(&self, data: StoreData) {
         let mut stores: Vec<tokio::task::JoinHandle<()>> = vec![];
+
+        if !data.logs.is_empty() {
+            let work = tokio::spawn({
+                let logs: Vec<DatabaseLog> = data.logs.clone();
+
+                let db = self.clone();
+
+                async move { db.store_logs(&logs).await }
+            });
+
+            stores.push(work);
+        }
 
         let res = join_all(stores).await;
 

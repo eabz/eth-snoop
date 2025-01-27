@@ -45,6 +45,7 @@ pub struct Config {
     pub db_url: String,
     pub debug: bool,
     pub rpc: String,
+    pub start_block: i64,
 }
 
 impl Default for Config {
@@ -65,6 +66,9 @@ impl Config {
             db_url: args.database,
             debug: args.debug,
             rpc: args.rpc,
+            // [custom setup]:  Define the block from which you want to start syncing.
+            //                  This is usually the same block at which the contract was deployed.
+            start_block: 0,
         }
     }
 }
