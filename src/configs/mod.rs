@@ -1,5 +1,7 @@
+use std::str::FromStr;
+
 use crate::chains::{get_chain, Chain};
-use alloy::primitives::Address;
+use alloy::{json_abi::Event, primitives::Address};
 use clap::{command, Parser};
 
 #[derive(Parser, Debug)]
@@ -40,14 +42,27 @@ pub struct IndexerArgs {
 }
 
 #[derive(Debug, Clone)]
+pub struct Subcontracts {
+    pub events: Vec<Event>,
+}
+
+#[derive(Debug, Clone)]
+pub struct ObserveContract {
+    pub address: Address,
+    pub events: Vec<Event>,
+    pub is_factory: bool,
+    pub start_block: i64,
+    pub subcontracts: Option<Subcontracts>,
+}
+
+#[derive(Debug, Clone)]
 pub struct Config {
     pub batch_size: usize,
     pub chain: Chain,
     pub db_url: String,
     pub debug: bool,
     pub rpc: String,
-    pub start_block: i64,
-    pub observe_contracts: Vec<Address>,
+    pub contract: ObserveContract,
 }
 
 impl Default for Config {
@@ -68,11 +83,18 @@ impl Config {
             db_url: args.database,
             debug: args.debug,
             rpc: args.rpc,
-            // [custom setup]:  Define the block from which you want to start syncing.
-            //                  This is usually the same block at which the contract was deployed.
-            start_block: 0,
-            // [custom setup]:  Define the list of contracts to observe for custom events.
-            observe_contracts: vec![],
+            contract: ObserveContract {
+                // [Custom setup]: The address of the contract that emits events.
+                address: Address::from_str("").unwrap(),
+                // [Custom setup]: The list of events to index from the contract.
+                events: vec![],
+                // [Custom setup]: Indicates whether the contract is a factory that generates subcontracts.
+                is_factory: false,
+                // [Custom setup]: The block number from which to start syncing. Typically, this is the block where the contract was deployed.
+                start_block: 0,
+                // [Custom setup]: If the contract is a factory, specifies the events to listen for in the generated subcontracts.
+                subcontracts: None,
+            },
         }
     }
 }
