@@ -2,7 +2,7 @@
 <strong>ETH Snoop</strong>
 </h1>
 <p align="center">
-<strong>ETH event indexer boilerplate</strong>
+<strong>ETH event indexer</strong>
 </p>
 
 ![build](https://github.com/eabz/eth-snoop/actions/workflows/build.yml/badge.svg)
