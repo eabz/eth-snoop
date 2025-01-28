@@ -93,7 +93,7 @@ impl Config {
                 // [Custom setup]: The block number from which to start syncing. Typically, this is the block where the contract was deployed.
                 start_block: 0,
                 // [Custom setup]: If the contract is a factory, specifies the events to listen for in the generated subcontracts.
-                subcontracts: None,
+                subcontracts: Some(Subcontracts { events: vec![] }),
             },
         }
     }
